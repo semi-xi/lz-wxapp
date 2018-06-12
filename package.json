@@ -1,0 +1,13 @@
+{
+  "name": "wxapp",
+  "version": "1.0.0",
+  "description": "",
+  "bin": {
+    "wxapp": "bin/index.js"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}
