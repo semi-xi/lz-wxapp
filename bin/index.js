@@ -3,31 +3,40 @@
 let fs = require('fs');
 let path = require('path');
 let file_name = '';
+let file_path = '';
 let suffix = '';
 let cmd2 = process.argv[2];
 let cmd3 = process.argv[3];
-let createFile = (fileName, suffix) => {
+let createFile = (fileName, suffix, path) => {
   if(!fileName) return;
-  fs.writeFile(`${ fileName }.${ suffix || 'wxss' }`, '', (e) => {
-    if(e) throw e;
-    console.log(`创建文件${ fileName }.${ suffix || 'wxss' }成功`)
-  })
-  fs.writeFile(`${ fileName }.wxml`, '', (e) => {
-    if(e) throw e;
-    console.log(`创建文件${ fileName }.wxml成功`)
-  })
-  fs.writeFile(`${ fileName }.json`, '{}', (e) => {
-    if(e) throw e;
-    console.log(`创建文件${ fileName }.json`)
-  })
-  fs.writeFile(`${ fileName }.js`, '', (e) => {
-    if(e) throw e;
-    console.log(`创建文件${ fileName }.js成功`)
-  })
-  
+  fs.writeFileSync(`${ path + fileName }.${ suffix || 'wxss' }`, '',)
+  fs.writeFileSync(`${ path + fileName }.wxml`, '', )
+  fs.writeFileSync(`${ path +fileName }.json`, '{}', )
+  fs.writeFileSync(`${ path + fileName }.js`, '', )
+}
+
+let syncCreateFile = (dirname) => {
+  if(fs.existsSync(dirname)) {
+    return true;
+  } else {
+    if(syncCreateFile(path.dirname(dirname))) {
+      fs.mkdirSync(dirname);
+      return true;
+    }
+  }
 }
 if(cmd2 && cmd2.toLocaleLowerCase() != '-s') {
-  file_name = process.argv[2];
+  if(cmd2.split('/').length > 1) {
+    let file_list = cmd2.split('/');
+    file_name = file_list[file_list.length - 1];
+    file_path = cmd2 + '/';
+    if(file_path[0] === '/') {
+      file_path = file_path.substr(1);
+    }
+    syncCreateFile(file_path);
+  } else {
+    file_name = cmd2;
+  }
   if(cmd3 && cmd3.toLocaleLowerCase() == '-s') {
     suffix = `scss`
   }
@@ -39,5 +48,5 @@ if(cmd2 && cmd2.toLocaleLowerCase() != '-s') {
     suffix ='scss';
   }
 }
-createFile(file_name, suffix);
 
+createFile(file_name, suffix, file_path)
