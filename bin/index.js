@@ -11,26 +11,22 @@ let cmd4 = process.argv[4];
 let pageFile = path.join(__dirname, '../src/page.js');
 let componentFile = path.join(__dirname, '../src/component.js');
 let rs = '';
+let jsonStr = '';
 
 let createFile = (fileName, suffix, path) => {
   if(!fileName) return;
   fs.writeFileSync(`${ path + fileName }.${ suffix || 'wxss' }`, '',)
   fs.writeFileSync(`${ path + fileName }.wxml`, '', )
-  fs.writeFileSync(`${ path +fileName }.json`, '{}', )
-  
-  
-  // fs.readFile(pageFile, 'utf8', (error, data) => {
-  //   if(error) throw err;
-  //   fs.writeFileSync(`${ path + fileName }.js`, 'Page({\nonLoad(){\n\n}\n})', )
-  // })
   if(cmd3 == '-c' || cmd4 == '-c') {
-    rs = fs.createReadStream(componentFile)
+    rs = fs.createReadStream(componentFile);
+    jsonStr = '{\n"component": true\n}';
   } else {
     rs = fs.createReadStream(pageFile);
+    jsonStr = '{}';
   }
   let ws = fs.createWriteStream(`${ path + fileName }.js`);
   rs.pipe(ws, { end: false });
-
+  fs.writeFileSync(`${ path +fileName }.json`, jsonStr, )
   console.log(`${ fileName }文件创建成功`)
 }
 
