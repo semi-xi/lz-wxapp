@@ -19,7 +19,7 @@ let createFile = (fileName, suffix, path) => {
   fs.writeFileSync(`${ path + fileName }.wxml`, '', )
   if(cmd3 == '-c' || cmd4 == '-c') {
     rs = fs.createReadStream(componentFile);
-    jsonStr = '{\n  "component": true,\n  "usingComponents:{}"\n}';
+    jsonStr = '{\n  "component": true,\n  "usingComponents": {}\n}';
   } else {
     rs = fs.createReadStream(pageFile);
     jsonStr = '{}';
